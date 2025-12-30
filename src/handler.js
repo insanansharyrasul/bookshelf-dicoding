@@ -13,11 +13,10 @@ const addBookHandler = (request, h) => {
     id, name, year, author, summary, publisher, pageCount, readPage, finished, reading, insertedAt, updatedAt
   };
 
-
   if (!name) {
     const response = h.response({
       status: 'fail',
-      message: "Gagal menambahkan buku. Mohon isi nama buku"
+      message: 'Gagal menambahkan buku. Mohon isi nama buku'
     });
     response.code(400);
     return response;
@@ -135,4 +134,26 @@ const updateBookHandler = (request, h) => {
   return response;
 };
 
-module.exports = { addBookHandler, getAllBookHandler, getBookDetailHandler, updateBookHandler };
+const deleteBookHandler = (request, h) => {
+  const { bookId } = request.params;
+  const index = books.findIndex((book) => book.id === bookId);
+
+  if (index !== -1) {
+    books.splice(index, 1);
+
+    return {
+      status: 'success',
+      message: 'Buku berhasil dihapus',
+    };
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan'
+  });
+  response.code(404);
+  return response;
+
+};
+
+module.exports = { addBookHandler, getAllBookHandler, getBookDetailHandler, updateBookHandler, deleteBookHandler };
